@@ -1,0 +1,63 @@
+<apex:page lightningStylesheets="true" controller="ContToDisp" id="overallCont" docType="html-5.0">
+     <apex:form >
+         <apex:pageBlock id="contList" >
+           <div>
+                   <apex:pageMessages >              
+                   </apex:pageMessages>
+             <apex:pageBlockTable value="{!fullRow}" var="cont"  >
+                 <apex:column >
+                   <apex:facet name="header">
+                       <apex:actionRegion >
+                       <apex:inputCheckbox value="{!selectAll}" id="headerSelect" selected="{!selectAll}" >  
+                          <apex:actionSupport event="onchange" reRender="contList" action="{!allSelect}"  />
+                       </apex:inputCheckbox>
+                       </apex:actionRegion>
+                     </apex:facet>
+                     <apex:actionRegion >
+                   <apex:inputCheckbox value="{!cont.isSelected}"  >
+                      <apex:actionSupport event="onchange" reRender="contList,TaskForContact" action="{!checkAll}"  />                       
+                     </apex:inputCheckbox>
+                     </apex:actionRegion>
+                 </apex:column>    
+                 <apex:column value="{!cont.Sno}" headerValue="S.No"/>
+                 <apex:column value="{!cont.invCont.FirstName}"/>
+                 <apex:column value="{!cont.invCont.LastName}"/>
+                 <apex:column value="{!cont.invCont.Email}"/>
+                 <apex:column value="{!cont.invCont.updated__c}"/>	
+             </apex:pageBlockTable>
+             </div >
+             <div>
+              <apex:pageBlockSection collapsible="false" title="Task for a Contact" id="TaskForContact" showHeader="true" >
+                 <apex:panelGrid columns="2" > 
+                  Select a Task: <apex:selectList value="{!optionsAvailable}" size="1" multiselect="false" disabled="{!!atleastOne}">
+                      <apex:selectOptions value="{!optionsAvailable}">
+                      </apex:selectOptions> 	
+                  </apex:selectList>
+                  Choose a Date: <apex:input value="{!chooseDate}" type="date" disabled="{!!atleastOne}"   >
+                     
+                     </apex:input>
+                     </apex:panelGrid>
+                 </apex:pageBlockSection> 	    
+             </div>
+   
+<apex:pageblockButtons location="Bottom"> 
+
+    <table>
+<tr>
+    <td >      
+               <apex:outputPanel id="myButtons"> 
+            <apex:commandButton value="First page" action="{!Beginning}" disabled="{!disabledPrevious}" reRender="myButtons,contList" accesskey="" />
+            <apex:commandButton value="<<" action="{!Previous}" disabled="{!disabledPrevious}" reRender="myButtons,contList"/>  
+            <apex:commandButton value=">>" action="{!Next}" disabled="{!disabledNext}" reRender="myButtons,contList"/> 
+            <apex:commandButton value="Last page" action="{!End}" disabled="{!disabledNext}" reRender="myButtons,contList"/> 
+        </apex:outputPanel> 
+    </td>
+    <td align="Right">
+         Page: <apex:outputText value=" {!PageNumber} of {! CEILING(total_size / list_size) }"/>
+    </td>
+        </tr>
+         </table>
+    </apex:pageblockButtons>            
+ </apex:pageBlock>
+     </apex:form>
+ </apex:page>
